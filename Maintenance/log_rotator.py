@@ -10,7 +10,7 @@ Log rotator for Mobile App.
 import os
 import logging
 import datetime
-import config
+from Maintenance import config
 
 #Remember - When ever u create a logger object, default should be [None].
 _errorLogger = [None]
