@@ -8,6 +8,7 @@ import urllib2
 import config
 import utils
 import log_rotator
+from Maintenance_utils.PeopleDataLoader import PeopleDataLoader
 # Create your views here.
 
 
@@ -35,7 +36,11 @@ class LoadPeopleFile(View):
         viewslogger = log_rotator.views_logger()
         result = {}
         try:
-            result = {'status':'success'}
+            apartmentid = request.POST.get('apartmentid')
+            file_name = request.POST.get('file_name')
+            SheetNo = request.POST.get('SheetNo')
+            peopleDataLoader = PeopleDataLoader()
+            result = peopleDataLoader.read_people_data(apartmentid, file_name, SheetNo)
         except urllib2.HTTPError, err:
             error_logger = log_rotator.error_logger()
             error_logger.debug("Exception::", exc_info=True)
