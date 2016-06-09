@@ -12,3 +12,17 @@ class PreRegistrations(models.Model):
     email_id = models.CharField(max_length=50)
     type_occupancy = models.BooleanField()
     apartment_id = models.CharField(max_length=50)
+    
+class ApartmentAccount(models.Model):
+    AppartmentName = models.CharField(max_length=50)
+    AppartmentEmail = models.CharField(max_length=50)
+    AppartmentAddress = models.CharField(max_length=500)
+    NoOfBlocks = models.CharField(max_length=10)
+    NumberOfFlats = models.CharField(max_length=10)
+    EmailAddress = models.CharField(max_length=50)
+    MobileNumber = models.CharField(max_length=15)
+    LandLine = models.CharField(max_length=15)
+    PasswordHash = models.CharField(max_length=50)
+    AccountHolderName = models.CharField(max_length=50)
+    AccountNumber = models.CharField(max_length=30)
+    IFSCCode = models.CharField(max_length=20)
