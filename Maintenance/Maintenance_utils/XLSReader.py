@@ -21,6 +21,11 @@ class xlsreader(object):
         keys = [sheet.cell(0, col_index).value for col_index in xrange(sheet.ncols)]
         dict_list = []
         for row_index in xrange(1, sheet.nrows):
-            d = {keys[col_index]: sheet.cell(row_index, col_index).value for col_index in xrange(sheet.ncols)}
+            d = {}
+            for col_index in xrange(sheet.ncols):
+                if type(sheet.cell(row_index, col_index).value) is float:
+                    d[keys[col_index]] = str(sheet.cell(row_index, col_index).value).split('.')[0]
+                else:
+                    d[keys[col_index]] = str(sheet.cell(row_index, col_index).value)
             dict_list.append(d)
         return dict_list
