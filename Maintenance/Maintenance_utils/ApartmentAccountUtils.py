@@ -32,3 +32,17 @@ class ApartmentAccountClass(object):
         except:
             raise
         return result
+    
+    def UpdateBankDetails(self,AppartmentEmail, AccountHolderName, AccountNumber, IFSCCode):
+        try:
+            resultSet = ApartmentAccount.objects.filter(AppartmentEmail = AppartmentEmail)
+            if (resultSet.count()>=0):
+                resultSet.update(AccountHolderName = AccountHolderName,
+                                 AccountNumber = AccountNumber,
+                                 IFSCCode = IFSCCode)
+                result = {'status': 'success', 'msg':'Account successfully updated'}
+            else:
+                result = {'status': 'error', 'msg':'Account email not found'}
+        except:
+            raise
+        return result
