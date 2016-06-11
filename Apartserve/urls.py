@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from Maintenance.views import LoadPeopleFile, CreateApartmentAccount, UpdateApartmentAccount
+from Maintenance.views import RegisterUserAccount
 
 urlpatterns = [
     #url(r'^admin/', admin.site.urls),
     url(r'^(loadPeople)/', LoadPeopleFile.as_view()),
     url(r'^(createApartment)/', CreateApartmentAccount.as_view()),
     url(r'^(updateApartment)/', UpdateApartmentAccount.as_view()),
+    url(r'^(registerUser)/', RegisterUserAccount.as_view())
 ]

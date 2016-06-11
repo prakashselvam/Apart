@@ -13,6 +13,32 @@ class PreRegistrations(models.Model):
     type_occupancy = models.BooleanField()
     apartment_id = models.CharField(max_length=50)
     
+class UnmatchedRegistrations(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    block_name = models.CharField(max_length=50)
+    flat_number = models.CharField(max_length=50)
+    mobile_number = models.CharField(max_length=50, primary_key = True)
+    email_id = models.CharField(max_length=50)
+    type_occupancy = models.BooleanField()
+    have_car = models.BooleanField()
+    apartment_id = models.CharField(max_length=50)
+    passwordHash = models.CharField(max_length=50)
+    
+class RegisteredApartUser(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    block_name = models.CharField(max_length=50)
+    flat_number = models.CharField(max_length=50)
+    mobile_number = models.CharField(max_length=50, primary_key = True)
+    email_id = models.CharField(max_length=50)
+    type_occupancy = models.BooleanField()
+    have_car = models.BooleanField()
+    apartment_id = models.CharField(max_length=50)
+    passwordHash = models.CharField(max_length=50)
+    otp_hash = models.CharField(max_length=50)
+    verified_mobile = models.BooleanField()
+    
 class ApartmentAccount(models.Model):
     AppartmentName = models.CharField(max_length=50)
     AppartmentEmail = models.CharField(max_length=50)

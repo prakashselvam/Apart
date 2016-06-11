@@ -10,6 +10,7 @@ import utils
 import log_rotator
 from Maintenance_utils.PeopleDataLoader import PeopleDataLoader
 from Maintenance_utils.ApartmentAccountUtils import ApartmentAccountClass
+from Maintenance_utils.ApartmentUserUtils import ApartUserUtil
 # Create your views here.
 
 
@@ -83,9 +84,8 @@ class CreateApartmentAccount(View):
             MobileNumber = request.POST.get('MobileNumber')
             LandLine = request.POST.get('LandLine')
             Password = request.POST.get('Password')
-            
-            apartmentAccountObj = ApartmentAccountClass()
-            result = apartmentAccountObj.createAccount(AppartmentName,AppartmentEmail,AppartmentAddress,NoOfBlocks,
+            apartmentUserObj = ApartUserUtil()
+            result = apartmentUserObj.createAccount(AppartmentName,AppartmentEmail,AppartmentAddress,NoOfBlocks,
                                                        NumberOfFlats,EmailAddress,MobileNumber,LandLine,Password)
         except urllib2.HTTPError, err:
             error_logger = log_rotator.error_logger()
@@ -125,6 +125,52 @@ class UpdateApartmentAccount(View):
             IFSCCode = request.POST.get('IFSCCode')
             apartmentAccountObj = ApartmentAccountClass()
             result = apartmentAccountObj.UpdateBankDetails(AppartmentEmail,AccountHolderName, AccountNumber, IFSCCode)
+        except urllib2.HTTPError, err:
+            error_logger = log_rotator.error_logger()
+            error_logger.debug("Exception::", exc_info=True)
+            if err.code == 401:
+                result = config.INVALID_CREDENTIALS_RESPONSE
+            else:
+                result = config.UNKNOWN_ERROR_RESPONSE
+        except KeyError:
+            error_logger = log_rotator.error_logger()
+            error_logger.debug("Exception::", exc_info=True)
+            result = config.MANDATORY_DATA_MISSING_RESPONSE
+        except:
+            error_logger = log_rotator.error_logger()
+            error_logger.debug("Exception::", exc_info=True)
+            result = config.UNKNOWN_ERROR_RESPONSE
+        viewslogger.debug("Response : %s" % result)
+        return HttpResponse(json.dumps(result, default=utils.json_default), content_type="application/json")
+    
+class RegisterUserAccount(View):
+    def get(self,request,url):
+        result = config.INVALID_REQUEST_METHOD_RESPONSE
+        return HttpResponse(json.dumps(result, default=utils.json_default), content_type="application/json")
+    def post(self,request,url):
+        """
+        @summary: View method to handle file load requests.
+        @param request: file path
+        @rtype: HttpResponse
+        @return: HttpResponse containing load file status.
+        """
+        viewslogger = log_rotator.views_logger()
+        result = {}
+        try:
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            block_name = request.POST.get('block_name')
+            flat_number = request.POST.get('flat_number')
+            mobile_number = request.POST.get('mobile_number')
+            email_id = request.POST.get('email_id')
+            type_occupancy = request.POST.get('type_occupancy')
+            have_car = request.POST.get('have_car')
+            apartment_id = request.POST.get('apartment_id')
+            password = request.POST.get('password')
+            apartmentUserObj = ApartUserUtil()
+            result = apartmentUserObj.registerUserAccount(first_name, last_name, block_name, flat_number, 
+                                                          mobile_number, email_id, type_occupancy, have_car, 
+                                                          apartment_id, password)
         except urllib2.HTTPError, err:
             error_logger = log_rotator.error_logger()
             error_logger.debug("Exception::", exc_info=True)
