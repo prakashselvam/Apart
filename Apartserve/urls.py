@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from Maintenance.views import LoadPeopleFile, CreateApartmentAccount, UpdateApartmentAccount
-from Maintenance.views import RegisterUserAccount, UnmatchedRegistrations
+from Maintenance.views import RegisterUserAccount, UnmatchedRegistrations, UpdatePreRegUser
 
 urlpatterns = [
     #url(r'^admin/', admin.site.urls),
@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^(createApartment)/', CreateApartmentAccount.as_view()),
     url(r'^(updateApartment)/', UpdateApartmentAccount.as_view()),
     url(r'^(registerUser)/', RegisterUserAccount.as_view()),
-    url(r'^(getunmatchreg)/', UnmatchedRegistrations.as_view())
+    url(r'^(getunmatchreg)/', UnmatchedRegistrations.as_view()),
+    url(r'^(updateprerg)/', UpdatePreRegUser.as_view())
 ]

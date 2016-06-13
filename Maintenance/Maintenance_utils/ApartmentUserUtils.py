@@ -76,6 +76,7 @@ class ApartUserUtil(object):
         except:
             raise
         return result
+    
     def getpreregistrations(self, block_name, flat_number, apartment_id, type_occupancy):
         try:
             type_occupancy = 1 if type_occupancy.lower() == 'owner' else 0
@@ -83,10 +84,11 @@ class ApartUserUtil(object):
             if unregResultset.count()>0:
                 result = self.model_to_dict(unregResultset[0],None,'passwordHash,have_car')
             else:
-                result = {'status': 'notmatched', 'msg':'registration details not in database. Contact your apartment admin'}
+                result = {'status': 'notmatched', 'msg':'registration details not in database.'}
         except:
             raise
         return result
+    
     def getunmatchreg(self, block_name, flat_number, apartment_id, type_occupancy):
         try:
             type_occupancy = 1 if type_occupancy.lower() == 'owner' else 0
@@ -94,7 +96,26 @@ class ApartUserUtil(object):
             if unregResultset.count()>0:
                 result = self.model_to_dict(unregResultset[0],None,'passwordHash,have_car')
             else:
-                result = {'status': 'notmatched', 'msg':'registration details not in database. Contact your apartment admin'}
+                result = {'status': 'notmatched', 'msg':'registration details not in database.'}
+        except:
+            raise
+        return result
+    
+    def updatePreRegUser(self,first_name,last_name, block_name, flat_number,mobile_number,
+                            email_id,type_occupancy, apartment_id):
+        try:
+            type_occupancy = 1 if type_occupancy.lower() == 'owner' else 0
+            resultSet = PreRegistrations.objects.filter(block_name = block_name, flat_number = flat_number, 
+                                                        apartment_id = apartment_id, type_occupancy = type_occupancy)
+            if (resultSet.count()>0):
+                resultSet.update(
+                    first_name = first_name,
+                    last_name = last_name,
+                    mobile_number = mobile_number, 
+                    email_id = email_id)
+                result = {'status': 'success', 'msg':'registration details updated. ask customer to try registering again'}
+            else:
+                result = {'status': 'notmatched', 'msg':'registration details not in database.'}
         except:
             raise
         return result
