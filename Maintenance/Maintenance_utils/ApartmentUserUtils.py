@@ -17,7 +17,23 @@ class ApartUserUtil(object):
         if exclude is not None:
             return {f.attname: getattr(instance, f.attname) for f in fields if f.name not in exclude.split(',')}
         return {f.attname: getattr(instance, f.attname) for f in fields}
-
+    
+    def verifyOTP(self, apartment_id, mobile_number, otp):
+        try:
+            otp_hash_object = hashlib.sha1(otp)
+            otp_hash = otp_hash_object.hexdigest()
+            regResultSet = RegisteredApartUser.objects.filter(mobile_number = mobile_number, apartment_id = apartment_id,
+                                                              otp_hash = otp_hash)
+            if regResultSet.count()>0:
+                regResultSet.update(verified_mobile = True,
+                                    otp_hash = '')
+                result = {'status': 'success', 'msg':'mobile number successfully verified'}
+                return result
+            else:
+                result = {'status': 'failure', 'msg':'wrong otp'}
+        except:
+            raise
+        return result
     def registerUserAccount(self,first_name,last_name, block_name, flat_number,mobile_number,
                             email_id,type_occupancy, have_car, apartment_id, password):
         try:
