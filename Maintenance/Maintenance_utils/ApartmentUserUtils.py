@@ -76,7 +76,17 @@ class ApartUserUtil(object):
         except:
             raise
         return result
-    
+    def getpreregistrations(self, block_name, flat_number, apartment_id, type_occupancy):
+        try:
+            type_occupancy = 1 if type_occupancy.lower() == 'owner' else 0
+            unregResultset = PreRegistrations.objects.filter(block_name=block_name, flat_number=flat_number, apartment_id=apartment_id,type_occupancy=type_occupancy)
+            if unregResultset.count()>0:
+                result = self.model_to_dict(unregResultset[0],None,'passwordHash,have_car')
+            else:
+                result = {'status': 'notmatched', 'msg':'registration details not in database. Contact your apartment admin'}
+        except:
+            raise
+        return result
     def getunmatchreg(self, block_name, flat_number, apartment_id, type_occupancy):
         try:
             type_occupancy = 1 if type_occupancy.lower() == 'owner' else 0

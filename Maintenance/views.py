@@ -208,7 +208,8 @@ class UnmatchedRegistrations(View):
             apartment_id = request.POST.get('apartment_id')
             type_occupancy = request.POST.get('type_occupancy')
             apartmentUserObj = ApartUserUtil()
-            result = apartmentUserObj.getunmatchreg(block_name, flat_number, apartment_id,type_occupancy)
+            result['unmatch'] = apartmentUserObj.getunmatchreg(block_name, flat_number, apartment_id,type_occupancy)
+            result['prereg'] = apartmentUserObj.getpreregistrations(block_name, flat_number, apartment_id, type_occupancy)
         except urllib2.HTTPError, err:
             error_logger = log_rotator.error_logger()
             error_logger.debug("Exception::", exc_info=True)
