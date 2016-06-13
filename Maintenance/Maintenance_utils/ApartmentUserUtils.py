@@ -9,9 +9,19 @@ import random
 from Maintenance.models import RegisteredApartUser, UnmatchedRegistrations, PreRegistrations
 
 class ApartUserUtil(object):
+    
+    def model_to_dict(self, instance, include=None, exclude=None):
+        fields = instance._meta.concrete_fields
+        if include is not None:
+            return {f.attname: getattr(instance, f.attname) for f in fields if f.name in include.split(',')}
+        if exclude is not None:
+            return {f.attname: getattr(instance, f.attname) for f in fields if f.name not in exclude.split(',')}
+        return {f.attname: getattr(instance, f.attname) for f in fields}
+
     def registerUserAccount(self,first_name,last_name, block_name, flat_number,mobile_number,
                             email_id,type_occupancy, have_car, apartment_id, password):
         try:
+            type_occupancy = 1 if type_occupancy.lower() == 'owner' else 0
             password_hash_object = hashlib.sha1(password)
             passwordHash = password_hash_object.hexdigest()
             resultSet = PreRegistrations.objects.filter(block_name = block_name, flat_number = flat_number, 
@@ -26,17 +36,17 @@ class ApartUserUtil(object):
                 otp_hash_object = hashlib.sha1(otp)
                 otp_hash = otp_hash_object.hexdigest()
                 RegisteredApartUser.objects.create(first_name = first_name,
-                                                    last_name = last_name,
-                                                    block_name = block_name,
-                                                    flat_number = flat_number,
-                                                    mobile_number = mobile_number,
-                                                    email_id = email_id,
-                                                    type_occupancy = type_occupancy,
-                                                    have_car = have_car,
-                                                    apartment_id = apartment_id,
-                                                    passwordHash = passwordHash,
-                                                    otp_hash = otp_hash,
-                                                    verified_mobile = False)
+                                            last_name = last_name,
+                                            block_name = block_name,
+                                            flat_number = flat_number,
+                                            mobile_number = mobile_number,
+                                            email_id = email_id,
+                                            type_occupancy = type_occupancy,
+                                            have_car = have_car,
+                                            apartment_id = apartment_id,
+                                            passwordHash = passwordHash,
+                                            otp_hash = otp_hash,
+                                            verified_mobile = False)
                 result = {'status': 'success', 'msg':'Account successfully ceated', 'otp': otp}
             else:
                 unregResultset = UnmatchedRegistrations.objects.filter(mobile_number = mobile_number)
@@ -53,16 +63,28 @@ class ApartUserUtil(object):
                                             passwordHash = passwordHash)
                 else:
                     UnmatchedRegistrations.objects.create(first_name = first_name,
-                                                        last_name = last_name,
-                                                        block_name = block_name,
-                                                        flat_number = flat_number,
-                                                        mobile_number = mobile_number,
-                                                        email_id = email_id,
-                                                        type_occupancy = type_occupancy,
-                                                        have_car = have_car,
-                                                        apartment_id = apartment_id,
-                                                        passwordHash = passwordHash)
+                                            last_name = last_name,
+                                            block_name = block_name,
+                                            flat_number = flat_number,
+                                            mobile_number = mobile_number,
+                                            email_id = email_id,
+                                            type_occupancy = type_occupancy,
+                                            have_car = have_car,
+                                            apartment_id = apartment_id,
+                                            passwordHash = passwordHash)
                 result = {'status': 'notmatched', 'msg':'mobile number not in database. Contact your apartment admin'}
+        except:
+            raise
+        return result
+    
+    def getunmatchreg(self, block_name, flat_number, apartment_id, type_occupancy):
+        try:
+            type_occupancy = 1 if type_occupancy.lower() == 'owner' else 0
+            unregResultset = UnmatchedRegistrations.objects.filter(block_name=block_name, flat_number=flat_number, apartment_id=apartment_id,type_occupancy=type_occupancy)
+            if unregResultset.count()>0:
+                result = self.model_to_dict(unregResultset[0],None,'passwordHash,have_car')
+            else:
+                result = {'status': 'notmatched', 'msg':'registration details not in database. Contact your apartment admin'}
         except:
             raise
         return result

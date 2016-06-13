@@ -26,15 +26,16 @@ class PeopleDataLoader(object):
         
     def write_people_data_to_db(self,people_dict_list,apartmentid):
         for row in people_dict_list:
-            resultSet = PreRegistrations.objects.filter(block_name = row['Block'], flat_number = row['FlatNumber'], apartment_id = apartmentid)
+            row['TypeofOccupancy'] = 1 if row['TypeofOccupancy'].lower() == 'owner' else 0
+            resultSet = PreRegistrations.objects.filter(block_name = row['Block'], flat_number = row['FlatNumber'], 
+                                                        apartment_id = apartmentid, type_occupancy = row['TypeofOccupancy'])
             self.UtilLogger.debug("Result set:%s: %s",resultSet,str(row))
             if (resultSet.count()>0):
                 resultSet.update(
                     first_name = row['Firstname'],
                     last_name = row['Lastnme'],
                     mobile_number = row['MobileNumber'], 
-                    email_id = row['EmailID'],
-                    type_occupancy = row['TypeofOccupancy'])
+                    email_id = row['EmailID'])
             else:
                 PreRegistrations.objects.create(
                         first_name = row['Firstname'],

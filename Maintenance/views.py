@@ -188,3 +188,41 @@ class RegisterUserAccount(View):
             result = config.UNKNOWN_ERROR_RESPONSE
         viewslogger.debug("Response : %s" % result)
         return HttpResponse(json.dumps(result, default=utils.json_default), content_type="application/json")
+    
+class UnmatchedRegistrations(View):
+    def get(self,request,url):
+        result = config.INVALID_REQUEST_METHOD_RESPONSE
+        return HttpResponse(json.dumps(result, default=utils.json_default), content_type="application/json")
+    def post(self,request,url):
+        """
+        @summary: View method to handle file load requests.
+        @param request: file path
+        @rtype: HttpResponse
+        @return: HttpResponse containing load file status.
+        """
+        viewslogger = log_rotator.views_logger()
+        result = {}
+        try:
+            block_name = request.POST.get('block_name')
+            flat_number = request.POST.get('flat_number')
+            apartment_id = request.POST.get('apartment_id')
+            type_occupancy = request.POST.get('type_occupancy')
+            apartmentUserObj = ApartUserUtil()
+            result = apartmentUserObj.getunmatchreg(block_name, flat_number, apartment_id,type_occupancy)
+        except urllib2.HTTPError, err:
+            error_logger = log_rotator.error_logger()
+            error_logger.debug("Exception::", exc_info=True)
+            if err.code == 401:
+                result = config.INVALID_CREDENTIALS_RESPONSE
+            else:
+                result = config.UNKNOWN_ERROR_RESPONSE
+        except KeyError:
+            error_logger = log_rotator.error_logger()
+            error_logger.debug("Exception::", exc_info=True)
+            result = config.MANDATORY_DATA_MISSING_RESPONSE
+        except:
+            error_logger = log_rotator.error_logger()
+            error_logger.debug("Exception::", exc_info=True)
+            result = config.UNKNOWN_ERROR_RESPONSE
+        viewslogger.debug("Response : %s" % result)
+        return HttpResponse(json.dumps(result, default=utils.json_default), content_type="application/json")

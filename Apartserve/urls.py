@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url
 from Maintenance.views import LoadPeopleFile, CreateApartmentAccount, UpdateApartmentAccount
-from Maintenance.views import RegisterUserAccount
+from Maintenance.views import RegisterUserAccount, UnmatchedRegistrations
 
 urlpatterns = [
     #url(r'^admin/', admin.site.urls),
     url(r'^(loadPeople)/', LoadPeopleFile.as_view()),
     url(r'^(createApartment)/', CreateApartmentAccount.as_view()),
     url(r'^(updateApartment)/', UpdateApartmentAccount.as_view()),
-    url(r'^(registerUser)/', RegisterUserAccount.as_view())
+    url(r'^(registerUser)/', RegisterUserAccount.as_view()),
+    url(r'^(getunmatchreg)/', UnmatchedRegistrations.as_view())
 ]
