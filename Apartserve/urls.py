@@ -16,14 +16,16 @@ Including another URLconf
 from django.conf.urls import url
 from Maintenance.views import LoadPeopleFile, CreateApartmentAccount, UpdateApartmentAccount
 from Maintenance.views import RegisterUserAccount, UnmatchedRegistrations, UpdatePreRegUser, VerifyOTP
+from Maintenance.views import LoadMaintenanceDueFile
 
 urlpatterns = [
     #url(r'^admin/', admin.site.urls),
     url(r'^(loadPeople)/', LoadPeopleFile.as_view()),
+    url(r'^(loadMaintenanceDue)/', LoadMaintenanceDueFile.as_view()),
     url(r'^(createApartment)/', CreateApartmentAccount.as_view()),
     url(r'^(updateApartment)/', UpdateApartmentAccount.as_view()),
     url(r'^(registerUser)/', RegisterUserAccount.as_view()),
     url(r'^(getunmatchreg)/', UnmatchedRegistrations.as_view()),
-    url(r'^(updateprerg)/', UpdatePreRegUser.as_view()),
+    url(r'^(updateprereg)/', UpdatePreRegUser.as_view()),
     url(r'^(verifyotp)/', VerifyOTP.as_view())
 ]

@@ -29,3 +29,10 @@ class xlsreader(object):
                     d[keys[col_index]] = str(sheet.cell(row_index, col_index).value)
             dict_list.append(d)
         return dict_list
+    
+    def readMonthFromSheet(self,file_name,SheetNo):
+        try:
+            xlfile = xlrd.open_workbook(file_name)
+        except IOError:
+            raise
+        return xlfile.sheet_names()[int(SheetNo)][15:22]
